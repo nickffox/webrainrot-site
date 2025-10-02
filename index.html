@@ -39,33 +39,30 @@
       /* immersive */
     }
 
-    /* Full-bleed background video */
+    /* Full-bleed background wrapper (static image used) */
     .bg-wrap {
       position: fixed;
       inset: 0;
       overflow: hidden;
-      z-index: -2;
-    }
-
-    .bg-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: contrast(1.06) saturate(1.1) brightness(0.75) hue-rotate(-8deg);
+      z-index: 0;
     }
 
     /* Fallback animated gradient if video doesn't load or prefers-reduced-motion */
     .bg-fallback {
       position: absolute;
       inset: 0;
-      background: radial-gradient(120vmax 80vmax at 20% 10%, #220033, transparent 60%),
+      /* first layer: centered cover image; fallback to gradients on top */
+      background-image: url('assets/rot_bg3.png'),
+        radial-gradient(120vmax 80vmax at 20% 10%, #220033, transparent 60%),
         radial-gradient(120vmax 80vmax at 80% 30%, #001a2e, transparent 60%),
         radial-gradient(100vmax 70vmax at 50% 80%, #200020, transparent 60%),
         linear-gradient(180deg, #050506, #09090a);
-      animation: drift 20s linear infinite;
-      filter: contrast(1.2) saturate(1.2);
+      background-size: cover, 120vmax 80vmax, 120vmax 80vmax, 100vmax 70vmax, auto;
+      background-position: center center, 20% 10%, 80% 30%, 50% 80%, center;
+      background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+      animation: drift 20s linear infinite alternate-reverse;
+      /* filter: contrast(1.2) saturate(1.2); */
+      /* filter: contrast(1.2) saturate(); */
     }
 
     @keyframes drift {
@@ -79,7 +76,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: -1;
+      z-index: 1;
       mix-blend-mode: overlay;
     }
 
@@ -359,7 +356,7 @@
 
     .marquee.marquee-top .track {
       animation-direction: reverse;
-      opacity: .85;
+      opacity: .7;
     }
 
     @keyframes mar {
@@ -377,6 +374,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
+      z-index: 2;
     }
 
     .vignette {
@@ -404,20 +402,14 @@
         animation: none
       }
 
-      .bg-video {
-        filter: none
-      }
+      /* video removed */
     }
   </style>
 </head>
 
 <body>
   <div class="bg-wrap" aria-hidden="true">
-    <!-- Supply your own looping, muted video at /assets/brainrot.webm (and optional .mp4). -->
-    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline poster="" preload="auto">
-      <source src="assets/brainrot.webm" type="video/webm" />
-      <source src="assets/brainrot.mp4" type="video/mp4" />
-    </video>
+    <!-- static background image used: assets/rot_bg1.png -->
     <div id="bgFallback" class="bg-fallback"></div>
   </div>
 
@@ -445,19 +437,7 @@
     </div>
   </main>
 
-  <!--
-  <div class="hud">
-    <button id="soundBtn" class="btn" aria-pressed="false" title="toggle sound">🔇 sound</button>
-    <button id="noiseBtn" class="btn" aria-pressed="true" title="toggle noise">💥 noise</button>
-  </div>
-  -->
-
-  <!--
-  <div class="corner">
-    <div>weBrainRot.com</div>
-    <div><a href="#" id="enter">enter the pit</a></div>
-  </div>
-  -->
+  <!-- HUD and corner overlays were intentionally removed -->
 
   <!-- Top marquee: reuses marquee styles but reversed and pinned to top -->
   <div class="marquee marquee-top" aria-hidden="true">
@@ -481,44 +461,15 @@
   <script>
     // Utilities
     const $ = (sel) => document.querySelector(sel);
-    const video = $('#bgVideo');
     const fallback = $('#bgFallback');
-    const soundBtn = $('#soundBtn');
-    const noiseBtn = $('#noiseBtn');
+    // sound/noise buttons removed; variables cleaned up
     const marquee = $('#marqueeTrack');
 
-    // Hide fallback if video can play; otherwise show fallback gradient
-    function handleVideoState() {
-      const ok = !!(video && video.readyState > 2);
-      fallback.style.opacity = ok ? 0 : 1;
-    }
-    video?.addEventListener('canplay', handleVideoState, { once: true });
-    setTimeout(handleVideoState, 1500);
+    // Keep fallback visible (we use an image plus gradient overlays).
+    // Previously the fallback was hidden when the video was playable; we keep it visible so
+    // `assets/rot_bg1.png` is always present as the background and as the video's poster.
 
-    // Sound toggle (user gesture required). Provide your own /assets/loop.mp3 if desired.
-    let soundEnabled = false;
-    let audio;
-    soundBtn?.addEventListener('click', async () => {
-      try {
-        if (!audio) {
-          audio = new Audio('assets/loop.mp3');
-          audio.loop = true;
-          audio.volume = 0.25;
-        }
-        soundEnabled = !soundEnabled;
-        soundBtn.textContent = soundEnabled ? '🔊 sound' : '🔇 sound';
-        soundBtn.setAttribute('aria-pressed', String(soundEnabled));
-        if (soundEnabled) { await audio.play(); } else { audio.pause(); }
-      } catch (err) { console.warn('Audio failed', err) }
-    });
-
-    // Noise toggle (grain + scanlines)
-    noiseBtn?.addEventListener('click', () => {
-      const overlay = document.querySelector('.overlay');
-      const active = overlay.style.display !== 'none';
-      overlay.style.display = active ? 'none' : 'block';
-      noiseBtn.setAttribute('aria-pressed', String(!active));
-    });
+    // Sound/noise controls removed — keeping overlays and effects enabled by default
 
     // Funny little easter egg: typing "brain" intensifies glitch for 6s
     let buffer = '';
@@ -534,8 +485,7 @@
     const style = document.createElement('style');
     style.textContent = `
       body.intense .glitch::before{ animation-duration: 1.1s; text-shadow: -3px 0 var(--accent) }
-      body.intense .glitch::after{ animation-duration: .9s; text-shadow: 3px 0 var(--accent2) }
-      body.intense .bg-video{ filter: contrast(1.25) saturate(1.35) brightness(.72) }`;
+      body.intense .glitch::after{ animation-duration: .9s; text-shadow: 3px 0 var(--accent2) }`;
     document.head.appendChild(style);
 
     // Duplicate marquee content to create seamless loop for both tracks
@@ -544,12 +494,7 @@
     if (marqueeTop) marqueeTop.innerHTML = marqueeTop.innerHTML + marqueeTop.innerHTML;
     if (marqueeBottom) marqueeBottom.innerHTML = marqueeBottom.innerHTML + marqueeBottom.innerHTML;
 
-    // "Enter the pit" anchor shakes the title
-    $('#enter')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      const t = document.querySelector('.title');
-      t.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 400, iterations: 2 });
-    });
+    // "Enter the pit" link removed
   </script>
 </body>
 
