@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>weBrainRot — we are become brainrot</title>
-  <meta name="description" content="weBrainRot: embrace the scroll. we are become brainrot." />
+  <title>yourbrain.rot</title>
+  <meta name="description" content="embrace the scroll." />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:title" content="weBrainRot" />
-  <meta property="og:description" content="we are become brainrot" />
+  <meta property="og:description" content="we brainrot" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://weBrainRot.com" />
   <meta property="og:image" content="/og.png" />
@@ -24,7 +24,7 @@
       /* purple glitch */
       --accent2: #00fff0;
       /* cyan glitch */
-      --noise-strength: 0.06;
+      --noise-strength: .06;
       /* tweakable */
     }
 
@@ -52,7 +52,7 @@
       position: absolute;
       inset: 0;
       /* first layer: centered cover image; fallback to gradients on top */
-      background-image: url('assets/rot_bg3.png'),
+      background-image: url('assets/rot_bg1.png'),
         radial-gradient(120vmax 80vmax at 20% 10%, #220033, transparent 60%),
         radial-gradient(120vmax 80vmax at 80% 30%, #001a2e, transparent 60%),
         radial-gradient(100vmax 70vmax at 50% 80%, #200020, transparent 60%),
@@ -60,9 +60,17 @@
       background-size: cover, 120vmax 80vmax, 120vmax 80vmax, 100vmax 70vmax, auto;
       background-position: center center, 20% 10%, 80% 30%, 50% 80%, center;
       background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-      animation: drift 20s linear infinite alternate-reverse;
-      /* filter: contrast(1.2) saturate(1.2); */
-      /* filter: contrast(1.2) saturate(); */
+      animation: drift 15s linear infinite alternate-reverse, bgBlur 5s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgBlur {
+      from {
+        filter: brightness(1.0) contrast(1.1) saturate(1.0) blur(0px);
+      }
+
+      to {
+        filter: brightness(1.5) contrast(1.0) saturate(1.0) blur(7px);
+      }
     }
 
     @keyframes drift {
@@ -386,7 +394,8 @@
     /* Accessibility: respect reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .bg-fallback {
-        animation: none
+        animation: none;
+        filter: none;
       }
 
       .glitch::before,
@@ -442,15 +451,17 @@
   <!-- Top marquee: reuses marquee styles but reversed and pinned to top -->
   <div class="marquee marquee-top" aria-hidden="true">
     <div class="track" id="marqueeTrackTop">
-      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY • WE
-      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY •
+      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT •
+      OBEY • WE
+      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT • OBEY •
     </div>
   </div>
 
   <div class="marquee" aria-hidden="true">
     <div class="track" id="marqueeTrack">
-      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY • WE
-      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY •
+      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT •
+      OBEY • WE
+      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT • OBEY •
     </div>
   </div>
 
