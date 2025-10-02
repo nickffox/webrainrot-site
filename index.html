@@ -219,7 +219,52 @@
       margin-top: .75rem;
       font-size: clamp(14px, 2.2vw, 20px);
       color: var(--fg-soft);
-      letter-spacing: .08em
+      letter-spacing: .08em;
+      display: inline-flex;
+      gap: .6rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .subtitle .subtitle-item::after {
+      content: '•';
+      margin-left: .5rem;
+      color: var(--fg-soft);
+      opacity: .9
+    }
+
+    .subtitle .subtitle-item:last-child::after {
+      content: '';
+      margin: 0
+    }
+
+    /* Responsive: stack subtitle items and chips vertically on small screens */
+    @media (max-width: 600px) {
+      .subtitle {
+        display: flex;
+        flex-direction: column;
+        gap: .45rem;
+        align-items: center;
+      }
+
+      /* Vertical dot dividers: small circular dot displayed below each item (except last) */
+      .subtitle .subtitle-item::after {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--fg-soft);
+        margin: .35rem auto 0;
+        opacity: .9;
+      }
+
+      .subtitle .subtitle-item:last-child::after {
+        display: none;
+      }
+
+      /* Let chips naturally wrap on small screens; no forced column */
     }
 
     /* Floating chips / badges */
@@ -313,7 +358,7 @@
     }
 
     .marquee.marquee-top .track {
-      /* animation-direction: reverse; */
+      animation-direction: reverse;
       opacity: .85;
     }
 
@@ -385,7 +430,11 @@
     <h1 class="title">
       <span class="glitch" data-text="we are become brainrot">we are brainrot</span>
     </h1>
-    <p class="subtitle">chronically online • doomscroll enabled • dopamine deficit deluxe</p>
+    <p class="subtitle">
+      <span class="subtitle-item">chronically online</span>
+      <span class="subtitle-item">doomscroll enabled</span>
+      <span class="subtitle-item">dopamine deficit deluxe</span>
+    </p>
     <div class="chips">
       <span class="chip">sigma grindset</span>
       <span class="chip">skibidi</span>
@@ -396,15 +445,19 @@
     </div>
   </main>
 
+  <!--
   <div class="hud">
     <button id="soundBtn" class="btn" aria-pressed="false" title="toggle sound">🔇 sound</button>
     <button id="noiseBtn" class="btn" aria-pressed="true" title="toggle noise">💥 noise</button>
   </div>
+  -->
 
+  <!--
   <div class="corner">
     <div>weBrainRot.com</div>
     <div><a href="#" id="enter">enter the pit</a></div>
   </div>
+  -->
 
   <!-- Top marquee: reuses marquee styles but reversed and pinned to top -->
   <div class="marquee marquee-top" aria-hidden="true">
