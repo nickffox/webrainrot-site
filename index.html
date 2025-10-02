@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,88 +16,356 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root{
-      --fg:#e7e7e7;
-      --fg-soft:#bdbdbd;
-      --bg:#0a0a0a;
-      --accent:#9b5cff; /* purple glitch */
-      --accent2:#00fff0; /* cyan glitch */
-      --noise-strength: 0.06; /* tweakable */
+    :root {
+      --fg: #e7e7e7;
+      --fg-soft: #bdbdbd;
+      --bg: #0a0a0a;
+      --accent: #9b5cff;
+      /* purple glitch */
+      --accent2: #00fff0;
+      /* cyan glitch */
+      --noise-strength: 0.06;
+      /* tweakable */
     }
 
-    html,body{
-      margin:0; height:100%; background:var(--bg); color:var(--fg);
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--fg);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      overflow:hidden; /* immersive */
+      overflow: hidden;
+      /* immersive */
     }
 
     /* Full-bleed background video */
-    .bg-wrap{position:fixed; inset:0; overflow:hidden; z-index:-2;}
-    .bg-video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:contrast(1.06) saturate(1.1) brightness(0.75) hue-rotate(-8deg);}
+    .bg-wrap {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -2;
+    }
+
+    .bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.06) saturate(1.1) brightness(0.75) hue-rotate(-8deg);
+    }
 
     /* Fallback animated gradient if video doesn't load or prefers-reduced-motion */
-    .bg-fallback{position:absolute; inset:0; background: radial-gradient(120vmax 80vmax at 20% 10%, #220033, transparent 60%),
+    .bg-fallback {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120vmax 80vmax at 20% 10%, #220033, transparent 60%),
         radial-gradient(120vmax 80vmax at 80% 30%, #001a2e, transparent 60%),
         radial-gradient(100vmax 70vmax at 50% 80%, #200020, transparent 60%),
-        linear-gradient(180deg,#050506,#09090a);
-      animation: drift 20s linear infinite; filter:contrast(1.2) saturate(1.2);}
-    @keyframes drift{to{background-position: 200% 0, -200% 0, 0 200%, 0 0}}
+        linear-gradient(180deg, #050506, #09090a);
+      animation: drift 20s linear infinite;
+      filter: contrast(1.2) saturate(1.2);
+    }
+
+    @keyframes drift {
+      to {
+        background-position: 200% 0, -200% 0, 0 200%, 0 0
+      }
+    }
 
     /* Grain + scanlines overlay */
-    .overlay{position:fixed; inset:0; pointer-events:none; z-index:-1; mix-blend-mode:overlay;}
-    .grain{position:absolute; inset:0; background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.12"/></svg>'); opacity:.45; animation:grainShift 1.2s steps(2) infinite;}
-    @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(1%, -1%)}50%{transform:translate(-1%, 1%)}75%{transform:translate(1%, 1%)}100%{transform:translate(0,0)}}
-    .scanlines{position:absolute; inset:0; background: repeating-linear-gradient( to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 1px, transparent 2px, transparent 3px ); opacity:.12;}
+    .overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      mix-blend-mode: overlay;
+    }
+
+    .grain {
+      position: absolute;
+      inset: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.12"/></svg>');
+      opacity: .45;
+      animation: grainShift 1.2s steps(2) infinite;
+    }
+
+    @keyframes grainShift {
+      0% {
+        transform: translate(0, 0)
+      }
+
+      25% {
+        transform: translate(1%, -1%)
+      }
+
+      50% {
+        transform: translate(-1%, 1%)
+      }
+
+      75% {
+        transform: translate(1%, 1%)
+      }
+
+      100% {
+        transform: translate(0, 0)
+      }
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05) 1px, transparent 2px, transparent 3px);
+      opacity: .12;
+    }
 
     /* Center stage */
-    .stage{position:relative; min-height:100dvh; display:grid; place-items:center; text-align:center; padding:clamp(12px,2vmin,24px);}
-    .title{font-size: clamp(40px, 8vw, 120px); letter-spacing: .02em; font-weight:900; text-transform:lowercase; line-height:0.9;}
+    .stage {
+      position: relative;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: clamp(12px, 2vmin, 24px);
+    }
+
+    .title {
+      font-size: clamp(40px, 8vw, 120px);
+      letter-spacing: .02em;
+      font-weight: 900;
+      text-transform: lowercase;
+      line-height: 0.9;
+    }
 
     /* Glitch effect */
-    .glitch{position:relative; display:inline-block;}
-    .glitch::before, .glitch::after{
-      content:attr(data-text); position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen;
+    .glitch {
+      position: relative;
+      display: inline-block;
     }
-    .glitch::before{left:-1px; text-shadow: -2px 0 var(--accent); clip-path: polygon(0 2%,100% 2%,100% 16%,0 16%);
-      animation:gl1 3s infinite linear alternate-reverse;}
-    .glitch::after{left:1px; text-shadow: 2px 0 var(--accent2); clip-path: polygon(0 60%,100% 60%,100% 76%,0 76%);
-      animation:gl2 2.2s infinite linear alternate-reverse;}
-    @keyframes gl1{ 0%{transform:translate(0)} 20%{transform:translate(-2px,-1px)} 40%{transform:translate(1px,1px)} 60%{transform:translate(-1px,2px)} 80%{transform:translate(2px,-2px)} 100%{transform:translate(0)} }
-    @keyframes gl2{ 0%{transform:translate(0)} 25%{transform:translate(2px,1px)} 50%{transform:translate(-1px,-2px)} 75%{transform:translate(1px,-1px)} 100%{transform:translate(0)} }
 
-    .subtitle{margin-top: .75rem; font-size: clamp(14px, 2.2vw, 20px); color:var(--fg-soft); letter-spacing:.08em}
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .glitch::before {
+      left: -1px;
+      text-shadow: -2px 0 var(--accent);
+      clip-path: polygon(0 2%, 100% 2%, 100% 16%, 0 16%);
+      animation: gl1 3s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      left: 1px;
+      text-shadow: 2px 0 var(--accent2);
+      clip-path: polygon(0 60%, 100% 60%, 100% 76%, 0 76%);
+      animation: gl2 2.2s infinite linear alternate-reverse;
+    }
+
+    @keyframes gl1 {
+      0% {
+        transform: translate(0)
+      }
+
+      20% {
+        transform: translate(-2px, -1px)
+      }
+
+      40% {
+        transform: translate(1px, 1px)
+      }
+
+      60% {
+        transform: translate(-1px, 2px)
+      }
+
+      80% {
+        transform: translate(2px, -2px)
+      }
+
+      100% {
+        transform: translate(0)
+      }
+    }
+
+    @keyframes gl2 {
+      0% {
+        transform: translate(0)
+      }
+
+      25% {
+        transform: translate(2px, 1px)
+      }
+
+      50% {
+        transform: translate(-1px, -2px)
+      }
+
+      75% {
+        transform: translate(1px, -1px)
+      }
+
+      100% {
+        transform: translate(0)
+      }
+    }
+
+    .subtitle {
+      margin-top: .75rem;
+      font-size: clamp(14px, 2.2vw, 20px);
+      color: var(--fg-soft);
+      letter-spacing: .08em
+    }
 
     /* Floating chips / badges */
-    .chips{display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin-top:1.5rem}
-    .chip{font-size:.8rem; opacity:.9; border:1px dashed rgba(255,255,255,.25); padding:.45rem .7rem; border-radius:999px; backdrop-filter: blur(3px); background: rgba(0,0,0,.25)}
+    .chips {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem
+    }
+
+    .chip {
+      font-size: .8rem;
+      opacity: .9;
+      border: 1px dashed rgba(255, 255, 255, .25);
+      padding: .45rem .7rem;
+      border-radius: 999px;
+      backdrop-filter: blur(3px);
+      background: rgba(0, 0, 0, .25)
+    }
 
     /* Bottom controls */
-    .hud{position:fixed; left:12px; bottom:12px; display:flex; gap:8px; z-index:10}
-    .btn{appearance:none; border:1px solid rgba(255,255,255,.28); background:rgba(10,10,10,.6); color:var(--fg); padding:.5rem .7rem; border-radius:10px; font-weight:600; cursor:pointer; transition: transform .12s ease, background .15s ease; backdrop-filter:blur(6px)}
-    .btn:hover{transform: translateY(-2px);}
+    .hud {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 10
+    }
 
-    .corner{position:fixed; right:12px; bottom:12px; text-align:right; font-size:.75rem; color:#9da3af; opacity:.9}
-    .corner a{color:#c4b5fd; text-decoration:none; border-bottom:1px dotted #c4b5fd33}
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .28);
+      background: rgba(10, 10, 10, .6);
+      color: var(--fg);
+      padding: .5rem .7rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .12s ease, background .15s ease;
+      backdrop-filter: blur(6px)
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .corner {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      text-align: right;
+      font-size: .75rem;
+      color: #9da3af;
+      opacity: .9
+    }
+
+    .corner a {
+      color: #c4b5fd;
+      text-decoration: none;
+      border-bottom: 1px dotted #c4b5fd33
+    }
 
     /* Marquee */
-    .marquee{position:fixed; left:0; right:0; bottom:0; height:32px; overflow:hidden; z-index:5;}
-    .marquee .track{position:absolute; white-space:nowrap; will-change:transform; animation:mar 14s linear infinite; opacity:.7; font-size:12px; letter-spacing:.08em}
-    @keyframes mar{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+    .marquee {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 32px;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .marquee .track {
+      position: absolute;
+      white-space: nowrap;
+      will-change: transform;
+      animation: mar 14s linear infinite;
+      opacity: .7;
+      font-size: 12px;
+      letter-spacing: .08em
+    }
+
+    /* Top marquee variant — reuse same styles but pin to top and reverse direction */
+    .marquee.marquee-top {
+      top: 0;
+      bottom: auto;
+      z-index: 6;
+    }
+
+    .marquee.marquee-top .track {
+      /* animation-direction: reverse; */
+      opacity: .85;
+    }
+
+    @keyframes mar {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
 
     /* CRT bloom & vignette */
-    .fx{position:fixed; inset:0; pointer-events:none;}
-    .vignette{position:absolute; inset:-10%; background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.55) 100%);}
+    .fx {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: -10%;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, .55) 100%);
+    }
 
     /* Accessibility: respect reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .bg-fallback{animation:none}
-      .glitch::before, .glitch::after{animation:none}
-      .marquee .track{animation:none}
-      .grain{animation:none}
-      .bg-video{filter:none}
+    @media (prefers-reduced-motion: reduce) {
+      .bg-fallback {
+        animation: none
+      }
+
+      .glitch::before,
+      .glitch::after {
+        animation: none
+      }
+
+      .marquee .track {
+        animation: none
+      }
+
+      .grain {
+        animation: none
+      }
+
+      .bg-video {
+        filter: none
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="bg-wrap" aria-hidden="true">
     <!-- Supply your own looping, muted video at /assets/brainrot.webm (and optional .mp4). -->
@@ -114,16 +383,16 @@
 
   <main class="stage">
     <h1 class="title">
-      <span class="glitch" data-text="we are become brainrot">we are become brainrot</span>
+      <span class="glitch" data-text="we are become brainrot">we are brainrot</span>
     </h1>
     <p class="subtitle">chronically online • doomscroll enabled • dopamine deficit deluxe</p>
     <div class="chips">
       <span class="chip">sigma grindset</span>
-      <span class="chip">🚬 skibidi</span>
+      <span class="chip">skibidi</span>
       <span class="chip">🧠 smooth</span>
       <span class="chip">rizzless</span>
-      <span class="chip">this post altered my neurochemistry</span>
-      <span class="chip">💀 dead internet theory</span>
+      <span class="chip">altered neurochemistry</span>
+      <!-- <span class="chip">💀 dead internet theory</span> -->
     </div>
   </main>
 
@@ -137,9 +406,18 @@
     <div><a href="#" id="enter">enter the pit</a></div>
   </div>
 
+  <!-- Top marquee: reuses marquee styles but reversed and pinned to top -->
+  <div class="marquee marquee-top" aria-hidden="true">
+    <div class="track" id="marqueeTrackTop">
+      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY • WE
+      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY •
+    </div>
+  </div>
+
   <div class="marquee" aria-hidden="true">
     <div class="track" id="marqueeTrack">
-      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY • WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY •
+      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY • WE
+      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • TOUCH GRASS • CONSUME CONTENT • OBEY •
     </div>
   </div>
 
@@ -157,11 +435,11 @@
     const marquee = $('#marqueeTrack');
 
     // Hide fallback if video can play; otherwise show fallback gradient
-    function handleVideoState(){
+    function handleVideoState() {
       const ok = !!(video && video.readyState > 2);
       fallback.style.opacity = ok ? 0 : 1;
     }
-    video?.addEventListener('canplay', handleVideoState, { once:true });
+    video?.addEventListener('canplay', handleVideoState, { once: true });
     setTimeout(handleVideoState, 1500);
 
     // Sound toggle (user gesture required). Provide your own /assets/loop.mp3 if desired.
@@ -169,7 +447,7 @@
     let audio;
     soundBtn?.addEventListener('click', async () => {
       try {
-        if(!audio){
+        if (!audio) {
           audio = new Audio('assets/loop.mp3');
           audio.loop = true;
           audio.volume = 0.25;
@@ -177,8 +455,8 @@
         soundEnabled = !soundEnabled;
         soundBtn.textContent = soundEnabled ? '🔊 sound' : '🔇 sound';
         soundBtn.setAttribute('aria-pressed', String(soundEnabled));
-        if(soundEnabled){ await audio.play(); } else { audio.pause(); }
-      } catch(err){ console.warn('Audio failed', err) }
+        if (soundEnabled) { await audio.play(); } else { audio.pause(); }
+      } catch (err) { console.warn('Audio failed', err) }
     });
 
     // Noise toggle (grain + scanlines)
@@ -193,9 +471,9 @@
     let buffer = '';
     window.addEventListener('keydown', (e) => {
       buffer = (buffer + e.key).slice(-5).toLowerCase();
-      if(buffer.endsWith('brain')){
+      if (buffer.endsWith('brain')) {
         document.body.classList.add('intense');
-        setTimeout(()=>document.body.classList.remove('intense'), 6000);
+        setTimeout(() => document.body.classList.remove('intense'), 6000);
       }
     });
 
@@ -207,15 +485,19 @@
       body.intense .bg-video{ filter: contrast(1.25) saturate(1.35) brightness(.72) }`;
     document.head.appendChild(style);
 
-    // Duplicate marquee content to create seamless loop
-    marquee.innerHTML = marquee.innerHTML + marquee.innerHTML;
+    // Duplicate marquee content to create seamless loop for both tracks
+    const marqueeTop = document.getElementById('marqueeTrackTop');
+    const marqueeBottom = document.getElementById('marqueeTrack');
+    if (marqueeTop) marqueeTop.innerHTML = marqueeTop.innerHTML + marqueeTop.innerHTML;
+    if (marqueeBottom) marqueeBottom.innerHTML = marqueeBottom.innerHTML + marqueeBottom.innerHTML;
 
     // "Enter the pit" anchor shakes the title
     $('#enter')?.addEventListener('click', (e) => {
       e.preventDefault();
       const t = document.querySelector('.title');
-      t.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}], {duration:400, iterations:2});
+      t.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 400, iterations: 2 });
     });
   </script>
 </body>
+
 </html>
