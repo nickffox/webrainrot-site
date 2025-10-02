@@ -86,6 +86,14 @@
       }
     }
 
+    /* Vertical drift variant for narrow viewports (mobile) */
+    @keyframes drift-vertical {
+      to {
+        /* move layers vertically: first image layer shifts down, other gradients move oppositely for subtle parallax */
+        background-position: center 200%, 20% -200%, 80% 200%, 50% 0%, center
+      }
+    }
+
     /* Grain + scanlines overlay */
     .overlay {
       position: fixed;
@@ -364,8 +372,9 @@
 
     /* Top marquee variant — reuse same styles but pin to top and reverse direction */
     .marquee.marquee-top {
-      top: 0;
+      top: 12px;
       bottom: auto;
+      height: 32px;
       z-index: 6;
     }
 
@@ -420,6 +429,15 @@
 
       /* video removed */
     }
+
+    /* On small screens, switch to a vertical drift animation so the primary image scrolls top->bottom */
+    @media (max-width: 600px) {
+      .bg-fallback {
+        /* preserve timing but use vertical movement for mobile */
+        animation: drift-vertical 18s linear infinite alternate-reverse, bgBlur 5s ease-in-out infinite alternate;
+        background-position: center center, 20% 10%, 80% 30%, 50% 80%, center;
+      }
+    }
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -459,7 +477,6 @@
       <span class="chip">🧠 smooth</span>
       <span class="chip">rizzless</span>
       <span class="chip">altered neurochemistry</span>
-      <!-- <span class="chip">💀 dead internet theory</span> -->
     </div>
   </main>
 
