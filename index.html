@@ -8,12 +8,19 @@
   <meta name="description" content="embrace the scroll." />
 
   <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="we brainrot" />
+  <meta property="og:title" content="doomscroll enabled" />
   <meta property="og:description" content="we brainrot" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://weBrainRot.com" />
-  <meta property="og:image" content="https://nickffox.github.io/webrainrot-site/assets/rot_bg1.png">
+  <meta property="og:url" content="https://webrainrot.com" />
+  <!-- Use HTTPS custom domain for og:image to avoid redirects from github.io and ensure crawlers see a secure URL -->
+  <meta property="og:image" content="https://webrainrot.com/assets/rot_bg1.png" />
+  <meta property="og:image:secure_url" content="https://webrainrot.com/assets/rot_bg1.png" />
+  <meta property="og:image:type" content="image/png" />
+  <!-- If you know the pixel size, set width/height (recommended). Example values below match current asset: -->
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://webrainrot.com/assets/rot_bg1.png" />
 
   <style>
     :root {
@@ -451,17 +458,15 @@
   <!-- Top marquee: reuses marquee styles but reversed and pinned to top -->
   <div class="marquee marquee-top" aria-hidden="true">
     <div class="track" id="marqueeTrackTop">
-      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT •
-      OBEY • WE
-      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT • OBEY •
+      &nbsp; CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT
+      TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS
     </div>
   </div>
 
   <div class="marquee" aria-hidden="true">
     <div class="track" id="marqueeTrack">
-      &nbsp; WE BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT •
-      OBEY • WE
-      BRAIN ROT • WE BRAIN ROT • WE BRAIN ROT • GLITCH IN THE FEED • DO NOT TOUCH GRASS • CONSUME CONTENT • OBEY •
+      &nbsp; CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT
+      TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS • CONSUME CONTENT • DO NOT TOUCH GRASS
     </div>
   </div>
 
