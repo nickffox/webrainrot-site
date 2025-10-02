@@ -162,6 +162,8 @@
     .glitch {
       position: relative;
       display: inline-block;
+      /* ensure the glitch sits above non-positioned overlays */
+      z-index: 4;
     }
 
     .glitch::before,
@@ -171,6 +173,10 @@
       inset: 0;
       pointer-events: none;
       mix-blend-mode: screen;
+      /* make sure whitespace (spaces) in data-text is preserved and the layers sit above surrounding content */
+      white-space: pre;
+      z-index: 5;
+      color: var(--fg);
     }
 
     .glitch::before {
@@ -464,7 +470,7 @@
 
   <main class="stage">
     <h1 class="title">
-      <span class="glitch" data-text="we are become brainrot">we are brainrot</span>
+      <span class="glitch" data-text="we are brainrot">we are brainrot</span>
     </h1>
     <p class="subtitle">
       <span class="subtitle-item">chronically online</span>
@@ -536,6 +542,15 @@
     const marqueeBottom = document.getElementById('marqueeTrack');
     if (marqueeTop) marqueeTop.innerHTML = marqueeTop.innerHTML + marqueeTop.innerHTML;
     if (marqueeBottom) marqueeBottom.innerHTML = marqueeBottom.innerHTML + marqueeBottom.innerHTML;
+
+    // Ensure any .glitch elements have data-text synced with their visible text content.
+    // If you edit the visible title text manually, the pseudo-elements use data-text; keep them in sync.
+    document.querySelectorAll('.glitch').forEach(el => {
+      const visible = el.textContent.trim();
+      if (!el.getAttribute('data-text') || el.getAttribute('data-text') !== visible) {
+        el.setAttribute('data-text', visible);
+      }
+    });
 
     // "Enter the pit" link removed
   </script>
